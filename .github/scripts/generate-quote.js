@@ -52,22 +52,15 @@ async function main() {
   const recentTitles = await fetchRecentArticleTitles(RSS_FEED_URLS);
 
   if (recentTitles.length === 0) {
-    console.warn("⚠️ RSSから取得できる記事タイトルがありませんでした。処理をスキップします。");
-    // 必要に応じて、ここでは固定のメッセージを生成したり、処理を中断したりする
-    // 今回は、予報生成に進まずに終了するようにします。
-    // もし固定のメッセージを出したい場合は、displayForecast の初期値を設定し、
-    // 以下のAPI呼び出しをスキップするなどの処理を記述します。
-    // displayForecast = "今日は情報収集がお休みのため、ふんわり予報もお休みです。";
-    // console.log(displayForecast); // ログには出す
-    // fs.writeFileSync(...) // Markdown生成に進む場合はこのコメントを外す
+    console.warn("⚠️ RSSから取得できる記事タイトルがありませんでした。予報は生成されません。");
     return; // RSSから情報が取れなければ予報は出さない
   }
 
   // 2. Gemini APIに投げるプロンプトを組み立てる
-  const titlesString = recentTitles.join("\n- "); // タイトルを箇条書き形式に
+  const titlesString = recentTitles.join("\n- ");
   const prompt = `
 以下の最近のニュース記事のタイトル一覧を参考に、世の中の「ふんわりとした雰囲気」を読み取ってください。
-そして、その雰囲気に基づいた「明日のふんわり動向予報」を、占いやおみくじのような、ユーモラスかつ曖昧なスタイルで、一言（３０から５０文字程度）で生成してください。
+そして、その雰囲気に基づいた「明日のふんわり動向予報」を、占いやおみくじのような、ユーモラスかつ曖昧なスタイルで、一言（30～60文字程度）で生成してください。
 深刻な内容、断定的な表現、政治的・宗教的に偏った内容は避けてください。読者がクスッと笑えたり、少しだけポジティブな気持ちになれるような、当たり障りのない楽しい予報をお願いします。
 予報の最後には「明日のラッキーアイテム：〇〇」のような一文を添えてください。
 
@@ -115,19 +108,20 @@ async function main() {
   const mdTitle = `明日のふんわり動向予報 ${today}`;
 
   // ツイート用のテキスト（予報の最初の部分など、短めに）
-  let tweetTextContent = displayForecast.split('。')[0] + '。'; // 最初の句点まで
+  let tweetTextContent = displayForecast.split('。')[0] + '。'; // 最初の句点までを取得
   if (tweetTextContent.length > 100) { // 長すぎる場合は短縮
       tweetTextContent = tweetTextContent.substring(0, 97) + "...";
   }
   const tweetText = `明日のふんわり予報: 「${tweetTextContent}」続きはブログで！ 👇`;
   
   const [year, month, day] = today.split('-');
-  const postFilename = `${year}-${month}-${day}-funwari-forecast.md`; // ファイル名も変更
-  const postPath = `/${year}/${month}/${day}/funwari-forecast.html`; // パーマリンクも変更
+  const postFilename = `${year}-${month}-${day}-funwari-forecast.md`;
+  const postPath = `/${year}/${month}/${day}/funwari-forecast.html`;
   const postPermalink = `${SITE_BASE_URL}${postPath}`;
   
   const encodedTweetText = encodeURIComponent(tweetText);
   const encodedPostPermalink = encodeURIComponent(postPermalink);
+  // ▼▼▼ 動的なTwitter共有URLをここで直接生成 ▼▼▼
   const dynamicTwitterShareUrl = `https://twitter.com/intent/tweet?text=${encodedTweetText}&url=${encodedPostPermalink}`;
 
   const md = `---
@@ -143,8 +137,7 @@ ${displayForecast}
 *この予報はAIが生成したエンターテイメントです。内容の正確性を保証するものではありません。お楽しみください。*
 ---
 ${BMAC_LINK ? `☕️ [Buy Me a Coffee](${BMAC_LINK})\n` : ''}
-🐦 <a href="#" class="twitter-share-button" data-post-permalink="${postPermalink}" data-tweet-essence="${encodeURIComponent(tweetTextContent)}">今日の予報をXでシェア</a>
-`;
+🐦 [今日の予報をXでシェア](${dynamicTwitterShareUrl}) `;
 
   const outDir = path.join(process.cwd(), "_posts");
   if (!fs.existsSync(outDir)) {
@@ -157,7 +150,6 @@ ${BMAC_LINK ? `☕️ [Buy Me a Coffee](${BMAC_LINK})\n` : ''}
 }
 
 main().catch(err => {
-  // main関数内で個別エラー処理をしているので、ここでは汎用的なエラー出力のみ
   console.error("❌ スクリプト全体で予期せぬエラーが発生しました:", err);
   process.exit(1);
 });
