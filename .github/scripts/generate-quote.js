@@ -15,6 +15,8 @@ if (!GEMINI_API_KEY) {
 const RSS_FEED_URLS = [
   "https://news.yahoo.co.jp/rss/topics/top-picks.xml", // Yahoo!ニュース 主要トピックス
   "https://www.itmedia.co.jp/rss/index.rdf",          // ITmedia総合
+  "https://assets.wor.jp/rss/rdf/nikkei/news.rdf",  //日経新聞速報
+   "https://assets.wor.jp/rss/rdf/minkabufx/statement.rdf", //みんかぶ FX/為替の要人発言
   // 他にも気になるニュースサイトやブログのRSSフィードを追加できます
 ];
 
