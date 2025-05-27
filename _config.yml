@@ -9,3 +9,6 @@ defaults:
       type: "posts"
     values:
       layout: "post"
+# ... (title, description などの設定) ...
+baseurl: "/Funwariyoso" # あなたのリポジトリ名に合わせてスラッシュから記述
+# ...
