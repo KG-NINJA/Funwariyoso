@@ -1,0 +1,11 @@
+title: Funwari予想 # あなたのサイトのタイトルに置き換えてください
+description: Gemini AIが自動生成したふんわりと明日を予想するシステム# あなたのサイトの説明文に置き換えてください
+# theme: minima # オプション: 人気のあるJekyllテーマ。最初はコメントアウトしておき、後で有効にできます。
+
+# _postsフォルダ内のMarkdownファイルにデフォルトでpostレイアウトを適用
+defaults:
+  - scope:
+      path: "_posts"
+      type: "posts"
+    values:
+      layout: "post"

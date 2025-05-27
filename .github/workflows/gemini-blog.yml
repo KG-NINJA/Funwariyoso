@@ -1,0 +1,49 @@
+# ワークフロー全体にリポジトリへの書き込み権限を付与
+permissions:
+  contents: write
+
+name: Daily Funwari Forecast Blog # 名前を「ふんわり予報ブログ」に変更
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # 日本時間11:00（UTCで指定）に実行
+  workflow_dispatch:     # 手動実行も可能にする
+
+jobs:
+  generate-forecast: # ジョブ名を変更 (generate-quote から generate-forecast へ)
+    runs-on: ubuntu-latest
+
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+    steps:
+      - name: 📥 リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: 🛠 Node.js セットアップ
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: 📦 依存パッケージのインストール
+        run: npm install axios rss-parser # rss-parser を追加
+
+      - name: ✨ Gemini APIでふんわり予報を生成しMarkdownに保存
+        run: |
+          node .github/scripts/generate-quote.js # スクリプト名は変更しない前提
+
+      - name: ✅ Gitへコミット＆プッシュ
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # generate-quote.js が _posts/YYYY-MM-DD-funwari-forecast.md という名前でファイルを保存する場合
+          git add _posts/*-funwari-forecast.md
+          # 変更があった場合のみコミットとプッシュを実行
+          if ! git diff --cached --quiet; then
+            echo "変更を検出しました。コミットとプッシュを実行します。"
+            # コミットメッセージを「ふんわり予報」用に変更
+            git commit -m "🔮 今日のふんわり予報を自動投稿 (`date --iso-8601=seconds`)"
+            git push
+          else
+            echo "変更はありませんでした。コミットとプッシュはスキップします。"
+          fi
