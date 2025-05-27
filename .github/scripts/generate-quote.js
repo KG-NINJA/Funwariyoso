@@ -18,7 +18,7 @@ const RSS_FEED_URLS = [
   // 他にも気になるニュースサイトやブログのRSSフィードを追加できます
 ];
 
-const SITE_BASE_URL = "https://kg-ninja.github.io/Funwari-Forecast-Blog"; // あなたの新しいブログのURL
+const SITE_BASE_URL = "https://kg-ninja.github.io/Funwariyoso"; // あなたの新しいブログのURL
 const BMAC_LINK = "https://www.buymeacoffee.com/kgninja"; // Buy Me a Coffeeのリンク（必要なら）
 // --- 設定項目ここまで ---
 
