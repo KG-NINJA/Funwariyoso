@@ -16,7 +16,9 @@ title: ホーム # このページのタイトル
         </h3>
         <p class="post-meta">
           <time datetime="{{ post.date | date_to_xmlschema }}">
-            {{ post.date | date: "%Y年%m月%d日" }}{{ post.date | date: "%H時%M分" }}
+  {{ post.date | date: "%Y年%m月%d日" }} {{ post.date | date: "%H時%M分" }}
+</time>
+
 
           </time>
         </p>
