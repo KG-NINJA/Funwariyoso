@@ -5,7 +5,8 @@ layout: default # このレイアウトは default.html を継承します
   <h2>{{ page.title }}</h2>
   <p class="post-meta">
     <time datetime="{{ page.date | date_to_xmlschema }}">
-      {{ page.date | date: "%Y年%m月%d日" }}
+      {{ page.date | date: "%Y年%m月%d日%H:%M" }}
+
     </time>
   </p>
   <div class="post-content">
