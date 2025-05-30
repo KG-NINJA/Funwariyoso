@@ -80,9 +80,7 @@ async function main() {
   const postFilename = `${year}-${month}-${day}-${hour}-${min}-funwari-forecast.md`;
   const postPath      = `/${year}/${month}/${day}/${hour}${min}-funwari-forecast.html`;
   const postPermalink = `${SITE_BASE_URL}${postPath}`;
-
-  const postPermalink = `${SITE_BASE_URL}${postPath}`;
-  const mdTitle = `現在のふんわり動向予報 ${year}-${month}-${day} ${timestamp}`;
+　const mdTitle = `現在のふんわり動向予報 ${year}-${month}-${day} ${timestamp}`;
 
   let tweetTextContent = displayForecast.split('。')[0] + '。';
   if (tweetTextContent.length > 100) {
