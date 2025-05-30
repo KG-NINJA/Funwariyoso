@@ -15,7 +15,10 @@
     {{ content }}
   </main>
   <footer>
-    <p>&copy; {{ "now" | date: "%Y" "%H:%M"  }} {{ site.title }}. All rights reserved.</p>
+    <p>&copy;
++ {{ "now" | date: "%Y年%m月%d日" }}
++ {{ "now" | date: "%H" }}:{{ "now" | date: "%M" }}
+ {{ site.title }}. All rights reserved.</p>
   </footer>
 </body>
 </html>
