@@ -86,7 +86,7 @@ async function main() {
   if (tweetTextContent.length > 100) {
     tweetTextContent = tweetTextContent.substring(0, 97) + "...";
   }
-  const tweetText = `現在のふんわり予報: 「${tweetTextContent}」#KG-NINJA 続きはブログで！👇`;
+  const tweetText = `現在のふんわり予報: 「${tweetTextContent}」#KGNINJA 続きはブログで！👇`;
   const dynamicTwitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent("https://kg-ninja.github.io/Funwariyoso/")}`;
 
 // 追加：ISO文字列で日時を取得（日本時間として扱われるよう Jekyll 側で自動調整されます）
