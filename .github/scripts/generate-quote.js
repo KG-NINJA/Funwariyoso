@@ -78,7 +78,9 @@ async function main() {
   const timestamp = `${hour}:${min}`;
 
   const postFilename = `${year}-${month}-${day}-${hour}-${min}-funwari-forecast.md`;
-  const postPath = `/${year}/${month}/${day}/funwari-forecast.html`;
+  const postPath      = `/${year}/${month}/${day}/${hour}${min}-funwari-forecast.html`;
+  const postPermalink = `${SITE_BASE_URL}${postPath}`;
+
   const postPermalink = `${SITE_BASE_URL}${postPath}`;
   const mdTitle = `現在のふんわり動向予報 ${year}-${month}-${day} ${timestamp}`;
 
@@ -86,15 +88,19 @@ async function main() {
   if (tweetTextContent.length > 100) {
     tweetTextContent = tweetTextContent.substring(0, 97) + "...";
   }
-  const tweetText = `現在のふんわり予報: 「${tweetTextContent}」続きはブログで！ 👇`;
+  const tweetText = `現在のふんわり予報: 「${tweetTextContent}」#KG-NINJA 続きはブログで！👇`;
   const dynamicTwitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(postPermalink)}`;
 
-  const md = `---
+// 追加：ISO文字列で日時を取得（日本時間として扱われるよう Jekyll 側で自動調整されます）
+const isoDate = new Date().toISOString();
+
+const md = `---
 title: "${mdTitle}"
-date: ${year}-${month}-${day}
+date: "${isoDate}"
 tags: [ふんわり予報, AI占い, 日常]
 layout: post
 ---
+
 
 ${displayForecast}
 
