@@ -1,6 +1,6 @@
 ---
-layout: default # default.html レイアウトを使用
-title: ホーム # このページのタイトル
+layout: default
+title: ホーム
 ---
 
 ## 最新のふんわり予想
@@ -16,13 +16,11 @@ title: ホーム # このページのタイトル
         </h3>
         <p class="post-meta">
           <time datetime="{{ post.date | date_to_xmlschema }}">
-  {{ post.date | date: "%Y年%m月%d日" }} {{ post.date | date: "%H時%M分" }}
-</time>
-
-
+            {{ post.date | date: "%Y年%m月%d日" }}
+            {{ post.date | date: "%H" }}:{{ post.date | date: "%M" }}
           </time>
         </p>
-        </li>
+      </li>
     {% endfor %}
   </ul>
 {% else %}
