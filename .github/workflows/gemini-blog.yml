@@ -41,3 +41,4 @@ jobs:
             git push
           else
             echo "変更はありませんでした。"
+            fi
