@@ -1,6 +1,7 @@
 title: ふんわり予想
 description: Gemini AIが自動生成したふんわりと明日を予想するシステム
 # theme: minima # オプション: 人気のあるJekyllテーマ。最初はコメントアウトしておき、後で有効にできます。
+timezone: "Asia/Tokyo"
 
 # _postsフォルダ内のMarkdownファイルにデフォルトでpostレイアウトを適用
 defaults:
