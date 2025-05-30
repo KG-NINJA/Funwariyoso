@@ -80,14 +80,14 @@ async function main() {
   const postFilename = `${year}-${month}-${day}-${hour}-${min}-funwari-forecast.md`;
   const postPath      = `/${year}/${month}/${day}/${hour}${min}-funwari-forecast.html`;
   const postPermalink = `${SITE_BASE_URL}${postPath}`;
-　const mdTitle = `現在のふんわり動向予報 ${year}-${month}-${day} ${timestamp}`;
+　const mdTitle = `現在のふんわり動向予報 ${year}-${month}-${day}`;
 
   let tweetTextContent = displayForecast.split('。')[0] + '。';
   if (tweetTextContent.length > 100) {
     tweetTextContent = tweetTextContent.substring(0, 97) + "...";
   }
   const tweetText = `現在のふんわり予報: 「${tweetTextContent}」#KG-NINJA 続きはブログで！👇`;
-  const dynamicTwitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(postPermalink)}`;
+  const dynamicTwitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent("https://kg-ninja.github.io/Funwariyoso/")}`;
 
 // 追加：ISO文字列で日時を取得（日本時間として扱われるよう Jekyll 側で自動調整されます）
 const isoDate = new Date().toISOString();
