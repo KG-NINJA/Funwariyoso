@@ -1,3 +1,10 @@
+const allowedHours = [7, 12, 19, 24];  // 朝昼晩のみ
+const currentHour = new Date().getHours();
+if (!allowedHours.includes(currentHour)) {
+  console.log(`🕒 現在 ${currentHour} 時。投稿対象外のためスキップします。`);
+  return;
+}
+
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
