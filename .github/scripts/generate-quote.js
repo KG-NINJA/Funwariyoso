@@ -116,7 +116,9 @@ Yoneda 補題の考え方は、「どんなニュース（文脈）でも同じ�
   // Jekyll用: ISO文字列も日本時間で
   const isoDate = nowJST.toISOString();
 
-  const md = `---
+  const md = `
+  
+---
 title: "${mdTitle}"
 date: "${isoDate}"
 tags: [ふんわり予報, AI占い, 日常]
@@ -127,6 +129,7 @@ ${displayForecast}
 
 <br>
 *この予報はAIが生成したエンターテイメントです。内容の正確性を保証するものではありません。ふんわり一日に４回更新されます。みんなにふんわり拡散希望です。*
+
 ---
 ${BMAC_LINK ? `☕️ [Buy Me a Coffee](${BMAC_LINK})\n` : ''}
 🐦 [現在の予報をXでシェア](${dynamicTwitterShareUrl})
