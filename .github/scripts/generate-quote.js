@@ -1,16 +1,21 @@
 // funwari_forecast.js
 // ------------------------------------
-// - 朝7時・昼12時・夜19時・深夜0時（24時）だけ投稿
+// - 朝7時・昼12時・夜19時・深夜0時（24時）から各2時間枠だけ投稿
 // - 日本時間で判定
 // - Gemini APIでふんわり予報生成
 // - Jekyllブログ用markdown(_posts)に保存
 // - Xシェア用リンク付き
 // ------------------------------------
 
-const allowedHours = [0, 7, 12, 19];  // 0時＝24時扱い
+const allowedHours = [0, 7, 12, 19];  // 各枠で2時間OK
 const nowJST = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
 const currentHour = nowJST.getHours();
-if (!allowedHours.includes(currentHour)) {
+const currentMinute = nowJST.getMinutes();
+
+// 「2時間枠」許可ロジック：例 7時→7,8時OK
+const extendedAllowedHours = allowedHours.map(h => [h, (h+1)%24]).flat();
+
+if (!extendedAllowedHours.includes(currentHour)) {
   console.log(`🕒 現在 ${currentHour} 時（JST）。投稿対象外のためスキップします。`);
   process.exit(0);
 }
@@ -116,9 +121,7 @@ Yoneda 補題の考え方は、「どんなニュース（文脈）でも同じ�
   // Jekyll用: ISO文字列も日本時間で
   const isoDate = nowJST.toISOString();
 
-  const md = `
-  
----
+  const md = `---
 title: "${mdTitle}"
 date: "${isoDate}"
 tags: [ふんわり予報, AI占い, 日常]
