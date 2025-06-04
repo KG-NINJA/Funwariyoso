@@ -1,8 +1,18 @@
-const allowedHours = [7, 12, 19, 24];  // 朝昼晩のみ
-const currentHour = new Date().getHours();
+// funwari_forecast.js
+// ------------------------------------
+// - 朝7時・昼12時・夜19時・深夜0時（24時）だけ投稿
+// - 日本時間で判定
+// - Gemini APIでふんわり予報生成
+// - Jekyllブログ用markdown(_posts)に保存
+// - Xシェア用リンク付き
+// ------------------------------------
+
+const allowedHours = [0, 7, 12, 19];  // 0時＝24時扱い
+const nowJST = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+const currentHour = nowJST.getHours();
 if (!allowedHours.includes(currentHour)) {
-  console.log(`🕒 現在 ${currentHour} 時。投稿対象外のためスキップします。`);
-  return;
+  console.log(`🕒 現在 ${currentHour} 時（JST）。投稿対象外のためスキップします。`);
+  process.exit(0);
 }
 
 const axios = require("axios");
@@ -61,7 +71,7 @@ async function main() {
 Yoneda 補題の考え方は、「どんなニュース（文脈）でも同じ一貫したメッセージを
 発信する主体は、本質的に同じ」という分布仮説と似ています。
 
-そして、その雰囲気に基づいた「現在のふんわり動向予報」を一言（30～60文字程度）で生成してください。
+そして、その雰囲気に基づいた「現在のふんわり動向予報」を一言（30～50文字程度）で生成してください。
 深刻な内容、断定的な表現、政治的・宗教的に偏った内容は避けてください。予報の最後には"#KGNINJA"という署名を必ず入れてください。
 
 最近のニュースタイトル：
@@ -83,17 +93,19 @@ Yoneda 補題の考え方は、「どんなニュース（文脈）でも同じ�
     console.error("❌ Gemini APIエラー:", error.response?.data || error.message);
   }
 
-  const now = new Date();
-  const [year, month, day] = now.toISOString().split('T')[0].split('-');
-  const hour = String(now.getHours()).padStart(2, '0');
-  const min = String(now.getMinutes()).padStart(2, '0');
+  // JSTでタイムスタンプ・ファイル名生成
+  const year  = nowJST.getFullYear();
+  const month = String(nowJST.getMonth() + 1).padStart(2, '0');
+  const day   = String(nowJST.getDate()).padStart(2, '0');
+  const hour  = String(nowJST.getHours()).padStart(2, '0');
+  const min   = String(nowJST.getMinutes()).padStart(2, '0');
   const timestamp = `${hour}:${min}`;
-
   const postFilename = `${year}-${month}-${day}-${hour}-${min}-funwari-forecast.md`;
   const postPath      = `/${year}/${month}/${day}/${hour}${min}-funwari-forecast.html`;
   const postPermalink = `${SITE_BASE_URL}${postPath}`;
-　const mdTitle = `現在のふんわり動向予報 ${year}-${month}-${day}`;
+  const mdTitle = `現在のふんわり動向予報 ${year}-${month}-${day} ${timestamp}`;
 
+  // X(Twitter)シェア用
   let tweetTextContent = displayForecast.split('。')[0] + '。';
   if (tweetTextContent.length > 100) {
     tweetTextContent = tweetTextContent.substring(0, 97) + "...";
@@ -101,16 +113,15 @@ Yoneda 補題の考え方は、「どんなニュース（文脈）でも同じ�
   const tweetText = `現在のふんわり予報: 「${tweetTextContent}」#KGNINJA 続きはブログで！👇`;
   const dynamicTwitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent("https://kg-ninja.github.io/Funwariyoso/")}`;
 
-// 追加：ISO文字列で日時を取得（日本時間として扱われるよう Jekyll 側で自動調整されます）
-const isoDate = new Date().toISOString();
+  // Jekyll用: ISO文字列も日本時間で
+  const isoDate = nowJST.toISOString();
 
-const md = `---
+  const md = `---
 title: "${mdTitle}"
 date: "${isoDate}"
 tags: [ふんわり予報, AI占い, 日常]
 layout: post
 ---
-
 
 ${displayForecast}
 
